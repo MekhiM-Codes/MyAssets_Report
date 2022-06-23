@@ -36,7 +36,7 @@ $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(
 /** 
  * SQL
  */
-//Retrieve code and stock description for class 1
+//Retrieve code and stock description for class 1 and 2
 $result = mysqli_query($connection, "SELECT sps_stok_class1.code as c1_code, sps_stok_class1.stok_desc as c1_stokdesc, sps_stok_class2.code as c2_code, sps_stok_class2.stok_desc as c2_stokdesc FROM sps_stok_class1 JOIN sps_stok_class2 ON sps_stok_class1.code = sps_stok_class2.class1 ");
 while($row = mysqli_fetch_array($result)) 
 {
