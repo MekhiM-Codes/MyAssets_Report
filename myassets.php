@@ -11,7 +11,10 @@
     	body {
 		font-size: 14px;
 		padding: 10px;
-	}
+	  }
+      table, th, td {
+    border:1px solid black;
+    }
     </style>
 </head>
 <body>
@@ -22,34 +25,33 @@
     </h1>
   </div>
 </header>
-
 </body>
+
+<table>
 <?php
-$db_host = '127.0.0.1';
-$db_user = 'root';
-$db_password = '';
-$db_name = 'myasset_malaysia'; 
+  $db_host = '127.0.0.1';
+  $db_user = 'root';
+  $db_password = '';
+  $db_name = 'myasset_malaysia'; 
 
-// Establish DB connections
-$connection = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(mysqli_connect_error());
-
-/** 
- * SQL
- */
-//Retrieve code and stock description for class 1 and 2
-$result = mysqli_query($connection, "SELECT sps_stok_class1.code as c1_code, sps_stok_class1.stok_desc as c1_stokdesc, sps_stok_class2.code as c2_code, sps_stok_class2.stok_desc as c2_stokdesc FROM sps_stok_class1 JOIN sps_stok_class2 ON sps_stok_class1.code = sps_stok_class2.class1 ");
-while($row = mysqli_fetch_array($result)) 
-{
-    echo "Class 2 code-" . $row['c2_code']. " Description: " . $row["c2_stokdesc"]. " --- " . $row["c1_stokdesc"]. "<br>";
-}
+  // Establish DB connections
+  $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(mysqli_connect_error());
 ?>
-
-<table style="width:100;">
-    <thead>
-        <tr>
-        </tr>
-    </thead>
+  <td>
+    <?php
+  /** 
+  * SQL
+  */
+  //Retrieve code and stock description for class 1 and 2
+  $result = mysqli_query($connection, "SELECT sps_stok_class1.code as c1_code, sps_stok_class1.stok_desc as c1_stokdesc, 
+  sps_stok_class2.code as c2_code, sps_stok_class2.stok_desc as c2_stokdesc FROM sps_stok_class1 
+  JOIN sps_stok_class2 ON sps_stok_class1.code = sps_stok_class2.class1 GROUP BY c1_code ");
+  while($row = mysqli_fetch_array($result)) 
+  {
+      echo '<tr><td>'. $row[ "c1_code"] . ' '. $row["c1_stokdesc"];
+      echo '<li>'. $row[ "c2_code"] . ' '. $row["c2_stokdesc"]. '</li></td></tr>';
+  }
+    ?>
+  </td>
 </table>
-
-
 </html>
