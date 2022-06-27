@@ -27,7 +27,6 @@
 </header>
 </body>
 
-<table>
 <?php
   $db_host = '127.0.0.1';
   $db_user = 'root';
@@ -37,21 +36,34 @@
   // Establish DB connections
   $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(mysqli_connect_error());
 ?>
-  <td>
     <?php
   /** 
   * SQL
   */
   //Retrieve code and stock description for class 1 and 2
-  $result = mysqli_query($connection, "SELECT sps_stok_class1.code as c1_code, sps_stok_class1.stok_desc as c1_stokdesc, 
-  sps_stok_class2.code as c2_code, sps_stok_class2.stok_desc as c2_stokdesc FROM sps_stok_class1 
-  JOIN sps_stok_class2 ON sps_stok_class1.code = sps_stok_class2.class1 GROUP BY c1_code ");
+  $result = mysqli_query($connection, "SELECT class1, stok_desc1 FROM inventori");
+
   while($row = mysqli_fetch_array($result)) 
   {
-      echo '<tr><td>'. $row[ "c1_code"] . ' '. $row["c1_stokdesc"];
-      echo '<li>'. $row[ "c2_code"] . ' '. $row["c2_stokdesc"]. '</li></td></tr>';
+      echo '<b>'.$row[ "class1"].' '.$row["stok_desc1"].'</b><br>';
+
+      $result = mysqli_query($connection, "SELECT class1, class2, stok_desc2 FROM inventori");
+      while($row = mysqli_fetch_array($result)) 
+      {
+      echo '&nbsp&nbsp'.$row[ "class2"].' '.$row["stok_desc2"].'<br>';
+
+      $result = mysqli_query($connection, "SELECT class1, class2, class3, stok_desc3 FROM inventori");
+      while($row = mysqli_fetch_array($result)) 
+      {
+      echo '&nbsp&nbsp&nbsp&nbsp'.$row[ "class3"].' '.$row["stok_desc3"].'<br>';
+
+      $result = mysqli_query($connection, "SELECT class1, class2, class3, code, stok_desc4 FROM inventori WHERE class1 = '101' AND class2='001' AND class3 = '001'  ");
+      while($row = mysqli_fetch_array($result)) 
+      {
+      echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$row[ "code"].' '.$row["stok_desc4"].'<br>';
+    }
+  }
+  }
   }
     ?>
-  </td>
-</table>
 </html>
