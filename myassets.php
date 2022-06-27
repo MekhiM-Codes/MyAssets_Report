@@ -19,6 +19,9 @@
 </head>
 <body>
 <header>
+<div class="p-3 text-right" >
+<button onclick="window.print()">Print</button>
+</div>
   <div class="p-5 text-center" >
     <h1 class="mb-1" style="font-size:22px">
       <b>Laporan Senarai Inventori</b>
@@ -26,8 +29,8 @@
   </div>
 </header>
 </body>
-
 <table>
+  <td>
 <?php
   $db_host = '127.0.0.1';
   $db_user = 'root';
@@ -36,22 +39,40 @@
 
   // Establish DB connections
   $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die(mysqli_connect_error());
-?>
-  <td>
-    <?php
+
   /** 
   * SQL
   */
   //Retrieve code and stock description for class 1 and 2
-  $result = mysqli_query($connection, "SELECT sps_stok_class1.code as c1_code, sps_stok_class1.stok_desc as c1_stokdesc, 
-  sps_stok_class2.code as c2_code, sps_stok_class2.stok_desc as c2_stokdesc FROM sps_stok_class1 
-  JOIN sps_stok_class2 ON sps_stok_class1.code = sps_stok_class2.class1 GROUP BY c1_code ");
+  $result = mysqli_query($connection, "SELECT DISTINCT class1, stok_desc1 FROM inventori ORDER BY class1");
   while($row = mysqli_fetch_array($result)) 
   {
-      echo '<tr><td>'. $row[ "c1_code"] . ' '. $row["c1_stokdesc"];
-      echo '<li>'. $row[ "c2_code"] . ' '. $row["c2_stokdesc"]. '</li></td></tr>';
+    echo '<b>'.$row[ "class1"].' '.$row["stok_desc1"].'</b><br>';
+
+    $class1_code = $row["class1"];
+    $result1 = mysqli_query($connection, "SELECT DISTINCT class1, class2, stok_desc2 FROM inventori WHERE class1 = '$class1_code'");
+
+    while($row = mysqli_fetch_array($result1)) 
+    {
+      echo '&nbsp&nbsp<b>'.$row[ "class2"].' '.$row["stok_desc2"].'</b><br>';
+
+      $class2_code = $row["class2"];
+      $result2 = mysqli_query($connection, "SELECT DISTINCT class1, class2, class3, stok_desc3 FROM inventori WHERE class1 = '$class1_code' AND class2 = '$class2_code'");
+      while($row = mysqli_fetch_array($result2)) 
+      {
+        echo '&nbsp&nbsp&nbsp&nbsp<b>'.$row[ "class3"].' '.$row["stok_desc3"].'</b><br>';
+
+        $class3_code = $row["class3"];
+        $result3 = mysqli_query($connection, "SELECT DISTINCT class1, class2, class3, code, stok_desc4 FROM inventori WHERE class1 = '$class1_code' AND class2 = '$class2_code' AND class3 =  $class3_code");
+        while($row = mysqli_fetch_array($result3)) 
+        {
+        echo '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$row[ "code"].' '.$row["stok_desc4"].'<br>';
+        }
+      }
+     }
   }
-    ?>
-  </td>
+
+?>
+</td>
 </table>
 </html>
